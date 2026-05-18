@@ -770,5 +770,5 @@ For a coursework report, the project can be described as a secure IoT communicat
 
 ## Author
 
-Developed as an enhanced academic IoT Chat project.
+Developed as an enhanced academic IoT Chat project by Loukas Theos.
 
