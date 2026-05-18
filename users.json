@@ -1,0 +1,44 @@
+{
+  "sauron": {
+    "role": "admin",
+    "salt": "8dc80ef72e4944e036d27fc2f23aca78",
+    "password_hash": "59c17772299b8b05fba01070638373424a041a077b3bf398d13ba757f572b551",
+    "iterations": 200000
+  },
+  "aragorn": {
+    "role": "admin",
+    "salt": "fc0568b5c1e81de9882faf27e2545de6",
+    "password_hash": "355fd24f50747ff3be9aff116da829d1067cd7c4b22983720ac2c1703f484875",
+    "iterations": 200000
+  },
+  "legolas": {
+    "role": "user",
+    "salt": "3d8b4f0a29d6fdf31aa716c434c727f5",
+    "password_hash": "da735c804a6ead1388813e314049f1a4f3b3219d0ae5f28d3b98ede5ecb5b2ab",
+    "iterations": 200000
+  },
+  "gandalf": {
+    "role": "user",
+    "salt": "f99633a987dab421e023065254b2fb4e",
+    "password_hash": "f74917c9e60cc0748af0aaf7f64b05bae727f625f5852023930e289dd449aa3e",
+    "iterations": 200000
+  },
+  "frodo": {
+    "role": "user",
+    "salt": "4b7ec59618d45303dec5d3bf6b79b9e0",
+    "password_hash": "4828d0166200f830e49dfb2c7a10329a03653771d0db27715d39e27f6c6a88ad",
+    "iterations": 200000
+  },
+  "sensor_01": {
+    "role": "device",
+    "salt": "e773451cd4dfabf8b02dcbc3a9ddbebb",
+    "password_hash": "b47742ba8d825f4d56462e9c0e77f2058d1ce74b6b4f773d1b564f9529c4958d",
+    "iterations": 200000
+  },
+  "sensor_02": {
+    "role": "device",
+    "salt": "47d1791d6d08776f77def00bd438cefe",
+    "password_hash": "533603d8ffb4a8865e5fe2ddac95ea656dbddf6f23b12ac6d6d49ec64419050f",
+    "iterations": 200000
+  }
+}
