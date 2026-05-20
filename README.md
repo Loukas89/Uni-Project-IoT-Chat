@@ -1,8 +1,8 @@
-# Enhanced IoT Chat System
+# IoT Chat
 
-A secure asynchronous client-server chat application in Python, upgraded into a small IoT communication prototype. The project supports encrypted messaging, role-based access control, external user management, IoT sensor readings, audit logging and a lightweight browser dashboard for monitoring connected clients and device telemetry.
+A secure Python-based IoT chat system with encrypted client-server communication, role-based access control, simulated IoT devices, audit logging, and a polished graphical chat room interface.
 
-This version is an enhanced implementation of the original coursework chat project. The aim is to demonstrate networking, authentication, authorization, encryption, audit logging and IoT-style communication in one compact Python project.
+This project started as a terminal-based secure chat application and has been extended into a more complete IoT communication prototype. It now supports multiple users, admin actions, IoT sensor messages, encrypted communication, and a unified GUI where all connected users can participate in the same shared conversation.
 
 ---
 
@@ -10,172 +10,254 @@ This version is an enhanced implementation of the original coursework chat proje
 
 - [Project Overview](#project-overview)
 - [Main Features](#main-features)
+- [Latest GUI Update](#latest-gui-update)
 - [Technologies Used](#technologies-used)
 - [Project Structure](#project-structure)
-- [How the System Works](#how-the-system-works)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Project](#running-the-project)
+- [Requirements](#requirements)
+- [How to Run After Forking the Project](#how-to-run-after-forking-the-project)
+- [Option 1: Run with the GUI](#option-1-run-with-the-gui)
+- [Option 2: Run with Terminal Clients](#option-2-run-with-terminal-clients)
 - [Demo Accounts](#demo-accounts)
-- [Available Commands](#available-commands)
-- [IoT Functionality](#iot-functionality)
-- [Dashboard](#dashboard)
+- [GUI Usage Guide](#gui-usage-guide)
+- [Available Chat Commands](#available-chat-commands)
+- [IoT Device Functionality](#iot-device-functionality)
+- [Configuration](#configuration)
 - [Security Features](#security-features)
 - [Audit Logging](#audit-logging)
-- [Example Demo Scenario](#example-demo-scenario)
-- [How to Add a New User](#how-to-add-a-new-user)
 - [Troubleshooting](#troubleshooting)
-- [Limitations](#limitations)
+- [Development Notes](#development-not-notes)
 - [Future Improvements](#future-improvements)
-- [Academic Notes](#academic-notes)
 
 ---
 
 ## Project Overview
 
-The Enhanced IoT Chat System is a Python-based application where multiple clients connect to a central server and exchange encrypted messages. The server manages authentication, connected users, IoT devices, private messages, admin commands and sensor readings.
+Enhanced IoT Chat is a Python client-server application designed to demonstrate secure communication between multiple users and IoT-style devices.
 
-The system can be used as a prototype for secure IoT communication. For example, a normal user can send chat messages, an admin can monitor or manage users, and a simulated IoT device can send telemetry such as temperature, humidity or motion readings.
+The system includes:
 
-The project runs locally by default using:
+- A central asynchronous server.
+- Encrypted communication between server and clients.
+- User authentication.
+- Role-based permissions.
+- Admin commands.
+- Simulated IoT devices and sensor readings.
+- Audit logs.
+- A polished graphical interface for shared chat room communication.
 
-```text
-Host: 127.0.0.1
-Port: 65432
-Dashboard: http://127.0.0.1:8080
-```
+The project can be used as a learning project for Python networking, socket programming, asynchronous server design, basic cryptography integration, user authentication, IoT-style device messaging, and GUI development with Tkinter.
 
 ---
 
 ## Main Features
 
-| Feature | Description |
-|---|---|
-| Asynchronous server | Uses `asyncio` to handle multiple clients at the same time. |
-| Encrypted communication | Messages are encrypted using AES before being sent over the network. |
-| Message framing | Each encrypted message is sent with a length prefix to avoid TCP read issues. |
-| External users file | User accounts are stored in `users.json` instead of being hardcoded in the server. |
-| Salted password hashing | Passwords use PBKDF2 with salt instead of plain SHA-256. |
-| Role-based access control | Different permissions exist for `admin`, `user` and `device` roles. |
-| Admin commands | Admins can broadcast messages and kick connected users. |
-| Private messages | Users can send direct messages with `/whisper`. |
-| IoT telemetry | Device accounts can send sensor readings with `/sensor`. |
-| IoT alerts | The server broadcasts alerts when readings exceed configured thresholds. |
-| Audit log file | Important events are saved in `logs/audit.log`. |
-| Web dashboard | A small browser dashboard displays connected clients, sensor readings and logs. |
-| `.env` configuration | Host, port, shared secret and dashboard settings can be configured externally. |
+### Secure Communication
+
+Messages between clients and the server are encrypted using AES-based encryption. The application also uses framed messages so that complete encrypted packets are read correctly over TCP.
+
+### Authentication
+
+Users authenticate with a username and password. User credentials are stored in `users.json` using salted password hashes.
+
+### Role-Based Access Control
+
+| Role     | Description                                                    |
+| -------- | -------------------------------------------------------------- |
+| `admin`  | Can chat, broadcast messages, kick users, and monitor devices. |
+| `user`   | Can participate in normal chat communication.                  |
+| `device` | Represents an IoT device and can send sensor readings.         |
+
+### Admin Tools
+
+Admin users can:
+
+- Send broadcast messages.
+- Kick connected users.
+- View connected users.
+- Monitor connected IoT devices.
+
+### IoT Device Simulation
+
+IoT devices can connect as clients and send sensor readings such as temperature, humidity, motion, and light. If a reading exceeds a configured threshold, the server can generate an IoT alert.
+
+---
+
+## Latest GUI Update
+
+The latest version includes a polished unified GUI file:
+
+```text
+ChatRoomGUI.py
+```
+
+This GUI provides:
+
+- One central chat room.
+- One shared conversation area.
+- A right sidebar for online users.
+- A right sidebar for IoT devices.
+- A connection area for users.
+- A `Send as` selector.
+- Admin tools for broadcast and kick.
+- IoT tools for sensor readings.
+- Duplicate-message handling.
+- Cleaner chat flow without unnecessary debug logs.
+- Removed visible clutter buttons such as refresh, disconnect, status, fill, and connect-all controls.
+
+The hidden development shortcut for connecting all demo users is still available:
+
+```text
+Cmd + Shift + A
+```
+
+or:
+
+```text
+Ctrl + Shift + A
+```
 
 ---
 
 ## Technologies Used
 
-| Technology | Purpose |
-|---|---|
-| Python 3 | Main programming language. |
-| `asyncio` | Asynchronous networking and concurrent client handling. |
-| `cryptography` | AES encryption and decryption. |
-| `hashlib` | PBKDF2 password hashing and AES key derivation. |
-| `hmac` | Secure comparison of password hashes. |
-| `json` | External user database through `users.json`. |
-| `logging` | Audit logging to file and console. |
-| HTML/CSS | Lightweight built-in monitoring dashboard. |
+| Technology   | Purpose                      |
+| ------------ | ---------------------------- |
+| Python       | Main programming language    |
+| asyncio      | Asynchronous server handling |
+| sockets      | Client-server communication  |
+| cryptography | AES encryption               |
+| hashlib      | Password hashing support     |
+| JSON         | User account storage         |
+| Tkinter      | GUI application              |
+| Git/GitHub   | Version control and hosting  |
 
 ---
 
 ## Project Structure
 
 ```text
-Enhanced-IoT-Chat/
+Uni-Project-IoT-Chat/
 │
-├── Server.py              # Main asynchronous encrypted server
-├── Client.py              # Terminal-based encrypted chat client
-├── users.json             # External user database with roles and password hashes
-├── requirements.txt       # Python dependencies
-├── .env.example           # Example environment configuration file
-├── README.md              # Full project documentation
-├── README_RUN.md          # Short quick-run guide
+├── Server.py
+├── Client.py
+├── ChatRoomGUI.py
+├── users.json
+├── requirements.txt
+├── README.md
+├── .env.example
+├── .gitignore
 │
-└── logs/                  # Created automatically when the server runs
-    └── audit.log          # Audit log file
+└── logs/
+    └── audit.log
 ```
 
----
-
-## How the System Works
-
-The system follows a client-server architecture.
-
-1. The server starts and listens for incoming TCP connections.
-2. A client connects to the server.
-3. The client sends login credentials using an encrypted message.
-4. The server verifies the username and password using the data stored in `users.json`.
-5. If authentication is successful, the server registers the client as online.
-6. The client can send chat messages, commands or IoT sensor readings.
-7. The server checks whether the user is authorized to perform the requested action.
-8. The server processes the action and sends encrypted responses to the appropriate clients.
-9. Important events are written to the audit log.
-10. The dashboard displays live information about clients, devices, readings and logs.
+| File               | Description                                           |
+| ------------------ | ----------------------------------------------------- |
+| `Server.py`        | Main secure chat server.                              |
+| `Client.py`        | Terminal-based client.                                |
+| `ChatRoomGUI.py`   | Polished unified GUI chat room.                       |
+| `users.json`       | Stores demo users, roles, salts, and password hashes. |
+| `requirements.txt` | Python dependencies.                                  |
+| `.env.example`     | Example configuration file.                           |
+| `.env`             | Local configuration file, not committed to GitHub.    |
+| `logs/audit.log`   | Audit log file generated when the server runs.        |
 
 ---
 
-## Installation
+## Requirements
 
-### 1. Clone or download the project
+Before running the project, make sure you have:
 
-If the project is uploaded to GitHub, clone it with:
+- Python 3.10 or newer.
+- Git.
+- pip.
+- Tkinter support.
+
+On most macOS Python installations, Tkinter is already included. If the GUI does not open, check your Python installation.
+
+---
+
+## How to Run After Forking the Project
+
+### 1. Clone the repository
+
+If you forked the project, replace `<your-username>` with your GitHub username:
 
 ```bash
-git clone https://github.com/your-username/your-repository-name.git
-cd your-repository-name
+git clone https://github.com/<your-username>/Uni-Project-IoT-Chat.git
 ```
 
-Or, if you have the project as a folder, open a terminal inside the project directory.
+Or clone the original repository:
 
-### 2. Create a virtual environment
+```bash
+git clone https://github.com/Loukas89/Uni-Project-IoT-Chat.git
+```
+
+### 2. Move into the project folder
+
+```bash
+cd Uni-Project-IoT-Chat
+```
+
+### 3. Create a virtual environment
 
 macOS/Linux:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 Windows PowerShell:
 
 ```powershell
-python -m venv venv
-venv\Scripts\Activate.ps1
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 ```
 
-### 3. Install dependencies
+### 4. Install dependencies
+
+macOS/Linux:
 
 ```bash
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
-The current dependency list is:
+Windows:
 
-```text
-cryptography>=42.0.0
+```powershell
+python -m pip install -r requirements.txt
 ```
 
----
+### 5. Create the local `.env` file
 
-## Configuration
-
-The project includes an example environment file:
-
-```text
-.env.example
-```
-
-To create your local configuration file:
+macOS/Linux:
 
 ```bash
 cp .env.example .env
 ```
 
-Default configuration:
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+### 6. Check `.env`
+
+A typical `.env` file should look like this:
+
+```env
+HOST=127.0.0.1
+PORT=65432
+DASHBOARD_HOST=127.0.0.1
+DASHBOARD_PORT=8080
+SECRET_KEY=change_this_32_byte_secret_key
+USERS_FILE=users.json
+LOG_FILE=logs/audit.log
+```
+
+Some versions may use `SHARED_SECRET` instead of `SECRET_KEY`:
 
 ```env
 HOST=127.0.0.1
@@ -188,587 +270,385 @@ DASHBOARD_HOST=127.0.0.1
 DASHBOARD_PORT=8080
 ```
 
-### Important configuration notes
-
-The server and all clients must use the same:
-
-```text
-HOST
-PORT
-SHARED_SECRET
-```
-
-The `SHARED_SECRET` is used to derive the AES encryption key. If the server and client use different secrets, messages cannot be decrypted correctly.
-
-For local testing, keep:
-
-```env
-HOST=127.0.0.1
-```
-
-For testing across different devices on the same network, the server can listen on:
-
-```env
-HOST=0.0.0.0
-```
-
-Then clients should use the server machine's local IP address instead of `127.0.0.1`.
+Use the variable name expected by your current `Server.py` and `ChatRoomGUI.py`.
 
 ---
 
-## Running the Project
+## Option 1: Run with the GUI
 
-### 1. Start the server
-
-Open the first terminal:
+The recommended way to run the project is through the GUI.
 
 ```bash
-python Server.py
+python3 ChatRoomGUI.py
 ```
 
-Expected output:
+On Windows:
+
+```powershell
+python ChatRoomGUI.py
+```
+
+Inside the GUI:
+
+1. Click `Start Server`.
+2. Select or type a user.
+3. Click `Connect`.
+4. Choose a sender from `Send as`.
+5. Type a message.
+6. Click `Send Message`.
+
+If you want to connect all demo users for testing, use:
 
 ```text
-IoT Chat Server listening on 127.0.0.1:65432
-Dashboard available at http://127.0.0.1:8080
+Cmd + Shift + A
 ```
 
-### 2. Start a client
+or:
 
-Open a second terminal:
+```text
+Ctrl + Shift + A
+```
+
+---
+
+## Option 2: Run with Terminal Clients
+
+You can also run the terminal-based version.
+
+### Terminal 1
 
 ```bash
-python Client.py
+python3 Server.py
 ```
 
-The client will ask for login details:
+Keep this terminal open.
 
-```text
-Enter your username:
-Enter your password:
-```
-
-After successful login, you can type messages or commands.
-
-### 3. Start multiple clients
-
-To test the chat properly, open more terminals and run:
+### Terminal 2
 
 ```bash
-python Client.py
+python3 Client.py
 ```
 
-Log in with different demo accounts.
-
----
-
-## Demo Accounts
-
-The project includes demo accounts inside `users.json`.
-
-| Username | Password | Role | Description |
-|---|---|---|---|
-| `sauron` | `sau123` | `admin` | Admin account with broadcast and kick permissions. |
-| `aragorn` | `ara123` | `admin` | Second admin account. |
-| `legolas` | `leg123` | `user` | Normal chat user. |
-| `gandalf` | `gan123` | `user` | Normal chat user. |
-| `frodo` | `fro123` | `user` | Normal chat user. |
-| `sensor_01` | `sensor123` | `device` | Simulated IoT device. |
-| `sensor_02` | `sensor123` | `device` | Simulated IoT device. |
-
-### Roles
-
-| Role | Permissions |
-|---|---|
-| `admin` | Chat messages, private messages, users list, devices list, server status, broadcast, kick, sensor readings, quit. |
-| `user` | Chat messages, private messages, users list, devices list, server status, quit. |
-| `device` | Sensor readings, status, basic messages, quit. |
-
----
-
-## Available Commands
-
-The client supports the following commands.
-
-| Command | Role | Description |
-|---|---|---|
-| `/help` | All | Shows the command menu. |
-| `/users` | Admin/User | Displays connected users. |
-| `/devices` | Admin/User | Displays connected IoT devices and latest readings. |
-| `/status` | All | Shows server status and uptime. |
-| `/whisper username message` | Admin/User | Sends a private message to a specific user. |
-| `/broadcast message` | Admin only | Sends a message to all connected clients. |
-| `/kick username` | Admin only | Disconnects a selected user from the server. |
-| `/sensor metric value` | Admin/Device | Sends an IoT sensor reading. |
-| `/quit` | All | Disconnects from the server. |
-
-Any other text is sent as a normal chat message.
-
-Example normal message:
-
-```text
-Hello everyone
-```
-
-Example private message:
-
-```text
-/whisper frodo Hello Frodo, this is a private message.
-```
-
-Example admin broadcast:
-
-```text
-/broadcast Server maintenance in 5 minutes.
-```
-
-Example kick command:
-
-```text
-/kick frodo
-```
-
----
-
-## IoT Functionality
-
-The enhanced version adds simulated IoT behavior. Device accounts such as `sensor_01` and `sensor_02` can send sensor readings to the server.
-
-Example:
-
-```text
-/sensor temperature 36.5
-```
-
-The server stores the latest reading for that device. If the value exceeds a configured threshold, the server broadcasts an IoT alert.
-
-Default thresholds in `Server.py`:
-
-```python
-SENSOR_THRESHOLDS = {
-    "temperature": 35.0,
-    "humidity": 80.0,
-    "motion": 1.0,
-}
-```
-
-Example readings:
-
-```text
-/sensor temperature 24.5
-/sensor humidity 72
-/sensor motion 1
-```
-
-Example alert:
-
-```text
-[iot alert] sensor_01 reported high temperature: 36.5 (threshold 35.0)
-```
-
-This makes the project more relevant to an IoT scenario, because the clients are not only human chat users. Some clients can act as connected devices that report telemetry to a central server.
-
----
-
-## Dashboard
-
-The server includes a lightweight browser dashboard.
-
-When the server is running, open:
-
-```text
-http://127.0.0.1:8080
-```
-
-The dashboard displays:
-
-- Server status
-- Connected clients
-- User roles
-- Client connection duration
-- Latest IoT readings
-- Audit log tail
-
-The page auto-refreshes every 5 seconds.
-
-This is not a full graphical chat interface. It is a monitoring dashboard that helps demonstrate the state of the system during testing or presentation.
-
----
-
-## Security Features
-
-### 1. AES encryption
-
-Messages are encrypted before being transmitted between client and server.
-
-The project uses:
-
-```text
-AES encryption in CFB mode
-Random IV per message
-Shared secret based key derivation
-```
-
-The AES key is derived from the `SHARED_SECRET` value using SHA-256, which produces a valid 32-byte AES key.
-
-### 2. Message framing
-
-TCP is stream-based, meaning one `read()` does not always equal one full message. To avoid broken or partial messages, this project sends each encrypted message with a 4-byte length prefix.
-
-Message structure:
-
-```text
-[4-byte message length][encrypted payload]
-```
-
-This makes message handling more reliable.
-
-### 3. PBKDF2 password hashing
-
-User passwords are not stored as plain text. Each account in `users.json` stores:
-
-```text
-role
-salt
-password_hash
-iterations
-```
-
-The password verification process uses PBKDF2 with SHA-256 and 200,000 iterations.
-
-### 4. Role-based authorization
-
-The server checks whether a user has permission before executing commands such as:
-
-```text
-BROADCAST
-KICK
-SENSOR
-USERS
-DEVICES
-STATUS
-```
-
-Unauthorized actions are rejected and logged.
-
-### 5. Audit logging
-
-Security-relevant events are written to a log file, including:
-
-- Successful logins
-- Failed login attempts
-- User connections
-- User disconnections
-- Chat messages
-- Private messages
-- Broadcasts
-- Kick actions
-- Unauthorized actions
-- IoT sensor alerts
-
----
-
-## Audit Logging
-
-The server writes logs to:
-
-```text
-logs/audit.log
-```
-
-Example log entries:
-
-```text
-2026-05-18 20:15:10 | INFO | User frodo authenticated successfully
-2026-05-18 20:15:25 | INFO | User frodo connected from 127.0.0.1:53012
-2026-05-18 20:16:02 | INFO | Sensor reading from sensor_01: temperature=36.5
-2026-05-18 20:16:02 | WARNING | Alert: sensor_01 reported high temperature: 36.5 (threshold 35.0)
-```
-
-The dashboard also displays the latest log entries.
-
----
-
-## Example Demo Scenario
-
-This is a simple scenario that can be used for a coursework demo or presentation.
-
-### Terminal 1: Start the server
-
-```bash
-python Server.py
-```
-
-### Terminal 2: Login as admin
-
-```bash
-python Client.py
-```
-
-Credentials:
+Login with:
 
 ```text
 Username: sauron
 Password: sau123
 ```
 
-Run:
-
-```text
-/status
-/users
-/devices
-```
-
-### Terminal 3: Login as normal user
+### Terminal 3
 
 ```bash
-python Client.py
+python3 Client.py
 ```
 
-Credentials:
+Login with:
 
 ```text
 Username: frodo
 Password: fro123
 ```
 
-Send a message:
+Now the clients can exchange messages through the server.
+
+---
+
+## Demo Accounts
+
+| Username    | Password    | Role   |
+| ----------- | ----------- | ------ |
+| `sauron`    | `sau123`    | admin  |
+| `aragorn`   | `ara123`    | admin  |
+| `frodo`     | `fro123`    | user   |
+| `legolas`   | `leg123`    | user   |
+| `gandalf`   | `gan123`    | user   |
+| `sensor_01` | `sensor123` | device |
+| `sensor_02` | `sensor123` | device |
+
+These accounts are intended for local testing and development.
+
+---
+
+## GUI Usage Guide
+
+### Top Bar
+
+| Control       | Purpose                                        |
+| ------------- | ---------------------------------------------- |
+| Start Server  | Starts the local server.                       |
+| Stop Server   | Stops the server if it was started by the GUI. |
+| Server status | Shows the current server status.               |
+
+### Connect User Area
+
+| Control               | Purpose                                |
+| --------------------- | -------------------------------------- |
+| Demo account dropdown | Selects a demo account.                |
+| Username field        | Shows or allows manual username entry. |
+| Password field        | Shows or allows manual password entry. |
+| Connect               | Connects the selected user.            |
+
+### Chat Area
+
+The central chat area shows:
+
+- User messages.
+- Join and leave events.
+- Broadcast messages.
+- IoT alerts.
+- Important server lifecycle messages.
+
+It intentionally hides noisy debug information such as authentication logs, auto-refresh messages, and repeated server status messages.
+
+### Send As Selector
+
+The `Send as` dropdown determines which connected user sends the next message.
+
+Example:
+
+1. Select `sauron`.
+2. Type `Hello everyone`.
+3. Click `Send Message`.
+
+The message appears as:
 
 ```text
-Hello, I am connected to the IoT chat server.
+[sauron] Hello everyone
 ```
 
-### Terminal 4: Login as IoT device
+### Right Sidebar
 
-```bash
-python Client.py
-```
+| Section       | Purpose                                          |
+| ------------- | ------------------------------------------------ |
+| Online users  | Shows currently connected users.                 |
+| IoT devices   | Shows connected IoT devices and latest readings. |
+| Control panel | Provides broadcast, kick, and sensor tools.      |
 
-Credentials:
+---
+
+## Available Chat Commands
+
+| Command                     | Description                                    |
+| --------------------------- | ---------------------------------------------- |
+| `/help`                     | Shows the help menu.                           |
+| `/users`                    | Requests online users.                         |
+| `/devices`                  | Requests connected IoT devices.                |
+| `/status`                   | Requests server status.                        |
+| `/whisper username message` | Sends a private message.                       |
+| `/broadcast message`        | Admin only: broadcasts a message to all users. |
+| `/kick username`            | Admin only: disconnects a user.                |
+| `/sensor metric value`      | Sends an IoT sensor reading.                   |
+| `/quit`                     | Disconnects the current client.                |
+
+In the GUI, most common features are available through buttons and panels.
+
+---
+
+## IoT Device Functionality
+
+Devices connect with role:
 
 ```text
-Username: sensor_01
-Password: sensor123
+device
 ```
 
-Send a safe reading:
+Example device accounts:
 
 ```text
-/sensor temperature 24.5
+sensor_01
+sensor_02
 ```
 
-Send a high reading:
+A device can send readings through a command:
 
 ```text
 /sensor temperature 36.5
 ```
 
-The server should broadcast an IoT alert.
+or through the GUI sensor panel:
 
-### Browser dashboard
+1. Select `sensor_01` from `Send as`.
+2. Choose `temperature`.
+3. Enter a value such as `36.5`.
+4. Click `Send sensor reading`.
 
-Open:
-
-```text
-http://127.0.0.1:8080
-```
-
-Check the connected clients, sensor readings and audit log.
+If the value exceeds the server threshold, the chat displays an IoT alert.
 
 ---
 
-## How to Add a New User
+## Configuration
 
-Users are stored in `users.json`. Each user needs:
+The project uses `.env` for local configuration.
 
-- role
-- salt
-- password hash
-- iteration count
+### `.env.example`
 
-Use the following Python snippet to generate a new password record:
+This file is committed to GitHub and acts as a template.
 
-```python
-import os
-import hashlib
+### `.env`
 
-password = "newpassword123"
-salt = os.urandom(16)
-iterations = 200000
+This file should be created locally and should not be committed to GitHub.
 
-password_hash = hashlib.pbkdf2_hmac(
-    "sha256",
-    password.encode("utf-8"),
-    salt,
-    iterations,
-)
+It is ignored by `.gitignore`.
 
-print("salt:", salt.hex())
-print("password_hash:", password_hash.hex())
-print("iterations:", iterations)
-```
+---
 
-Then add the new user to `users.json`:
+## Security Features
 
-```json
-"new_user": {
-  "role": "user",
-  "salt": "generated_salt_here",
-  "password_hash": "generated_hash_here",
-  "iterations": 200000
-}
-```
+This project includes several educational security features:
 
-Valid roles are:
+- Encrypted client-server communication.
+- Password hashing.
+- Salted credentials in `users.json`.
+- Role-based permissions.
+- Admin-only commands.
+- Audit logging.
+- Local environment configuration.
+
+This is still an educational prototype and should not be treated as a production security system without further hardening.
+
+---
+
+## Audit Logging
+
+When the server runs, audit logs are written to:
 
 ```text
-admin
-user
-device
+logs/audit.log
 ```
+
+The logs help track:
+
+- Successful login.
+- Failed login.
+- User connection.
+- User disconnection.
+- Messages.
+- Admin actions.
+- IoT alerts.
 
 ---
 
 ## Troubleshooting
 
-### Problem: `ModuleNotFoundError: No module named 'cryptography'`
+### Port already in use
 
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Problem: `Could not connect to server`
-
-Make sure the server is running first:
+If port `65432` is already in use:
 
 ```bash
-python Server.py
+lsof -i :65432
 ```
 
-Also check that the client and server use the same host and port.
+Then kill the process:
 
-### Problem: Authentication fails
-
-Check that you are using one of the demo accounts correctly.
+```bash
+kill -9 <PID>
+```
 
 Example:
 
-```text
-Username: frodo
-Password: fro123
+```bash
+kill -9 69004
 ```
 
-Also check that `users.json` exists in the same folder as `Server.py`, unless a different path is set in `.env`.
+Check the dashboard port too:
 
-### Problem: Messages cannot be decrypted
-
-Make sure the server and client use the same `SHARED_SECRET` in `.env`.
-
-### Problem: Dashboard does not open
-
-Check that the server is running and that dashboard mode is enabled:
-
-```env
-DASHBOARD_ENABLED=true
-DASHBOARD_HOST=127.0.0.1
-DASHBOARD_PORT=8080
+```bash
+lsof -i :8080
 ```
 
-Then open:
+### GUI says server already running
 
-```text
-http://127.0.0.1:8080
+This means something is already listening on the configured server port. You can either continue using the running server, stop the old server process, or change `PORT` in `.env`.
+
+### Authentication fails
+
+Check that:
+
+- The username is correct.
+- The password is correct.
+- `users.json` exists.
+- The server and GUI use the same secret key configuration.
+
+### Tkinter GUI does not open
+
+Check Tkinter:
+
+```bash
+python3 -m tkinter
 ```
 
-### Problem: Port already in use
+If a small test window opens, Tkinter is installed.
 
-Change the port in `.env`:
+### Missing `cryptography`
 
-```env
-PORT=65433
-DASHBOARD_PORT=8081
+Install requirements again:
+
+```bash
+python3 -m pip install -r requirements.txt
 ```
 
-Restart the server and clients.
+### Cryptography warnings
+
+Some versions of the `cryptography` package may show deprecation warnings for CFB mode. These warnings do not stop the program from running.
+
+Future improvement: migrate from AES-CFB to AES-GCM.
 
 ---
 
-## Limitations
+## Development Notes
 
-This project is designed as an educational prototype. It demonstrates important concepts, but it is not production-ready.
+The current GUI provides a cleaner interface than earlier versions:
 
-Current limitations include:
+- One window.
+- One central chat area.
+- Multiple connected users.
+- Shared conversation flow.
+- Right-side monitoring for users and devices.
+- Reduced button clutter.
+- Hidden developer shortcut for connecting all accounts.
 
-- The encryption uses a shared secret, not a full TLS certificate-based setup.
-- The dashboard is read-only and basic.
-- Users are stored in a JSON file instead of a database.
-- There is no graphical chat interface yet.
-- There is no MQTT support, which is commonly used in real IoT systems.
-- Sensor data is kept in memory and not persisted to a database.
-- There are no automated unit tests yet.
+The following visible buttons were intentionally removed:
+
+```text
+Refresh users
+Refresh devices
+Disconnect selected sender
+Disconnect all
+Users
+Devices
+Status
+Fill
+Connect All
+```
+
+The app still refreshes users/devices internally.
 
 ---
 
 ## Future Improvements
 
-Possible future improvements include:
+Possible future improvements:
 
-1. **Full GUI client**
-   - Add a Tkinter, PyQt or web-based chat interface.
-
-2. **TLS support**
-   - Replace the custom shared-secret encryption approach with TLS.
-
-3. **Database integration**
-   - Store users, logs and sensor readings in SQLite or PostgreSQL.
-
-4. **MQTT integration**
-   - Add MQTT support to make the system closer to real IoT architecture.
-
-5. **Device registration**
-   - Add a secure process for registering new IoT devices.
-
-6. **Persistent telemetry storage**
-   - Save sensor readings to a database for later analysis.
-
-7. **Charts in dashboard**
-   - Display temperature, humidity and motion data visually.
-
-8. **Automated tests**
-   - Add unit tests for authentication, authorization, encryption and command handling.
-
-9. **Docker support**
-   - Add a Dockerfile and docker-compose setup for easier deployment.
-
-10. **Improved admin panel**
-   - Add dashboard buttons for kicking users, viewing devices and managing logs.
+- Replace AES-CFB with AES-GCM.
+- Add SQLite storage for users, messages, audit logs, and sensor readings.
+- Add user registration.
+- Add message history.
+- Add timestamps in persistent storage.
+- Add device heartbeat monitoring.
+- Improve role-based GUI controls.
+- Disable admin tools when selected sender is not an admin.
+- Disable sensor tools when selected sender is not a device.
+- Add MQTT support for real IoT integration.
+- Package the GUI as a desktop application.
 
 ---
 
-## Academic Notes
+## Disclaimer
 
-This project demonstrates several important computer science and cybersecurity concepts:
-
-- Client-server architecture
-- Asynchronous programming
-- Socket-based communication
-- Symmetric encryption
-- Password hashing
-- Authentication and authorization
-- Role-based access control
-- Audit logging
-- IoT telemetry simulation
-- Secure command handling
-- Basic monitoring dashboard
-
-For a coursework report, the project can be described as a secure IoT communication prototype where users and simulated IoT devices exchange encrypted messages through a central server. The server acts as the trusted communication hub, handling authentication, permissions, message routing, device telemetry and security monitoring.
+This project is an educational prototype. It demonstrates networking, encryption, authentication, GUI design, and IoT-style messaging concepts. It is not intended to be deployed as a production security system without further hardening, testing, and security review.
 
 ---
 
 ## Author
 
-Developed as an enhanced academic IoT Chat project by Loukas Theos.
-
+Developed by Loukas Theos as part of an IoT Chat learning/project workflow.
